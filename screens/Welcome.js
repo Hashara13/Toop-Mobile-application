@@ -73,10 +73,11 @@ const Welcome = ({ navigation }) => {
                             borderRadius: 20,
                             position: "absolute",
                             top: 10,
-                            left: 0,
+                            
+                            alignItems:'center',
                             transform: [
-                                { translateX: 50 },
-                                { translateY: 50 },
+                                { translateX: 80 },
+                                // { translateY: 50 },
                                 { rotate: "0deg" }
                             ]
                         }}
