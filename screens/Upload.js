@@ -15,7 +15,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import COLORS from "../constants/colors";
 
 
-const Upload = () => {
+const Upload = ({navigation }) => {
   const [step, setStep] = useState(1);
   const [musicFile, setMusicFile] = useState(null);
   const [isChecked, setIsChecked] = useState(false);

@@ -11,21 +11,38 @@ import COLORS from "../constants/colors";
 import CatList from "../constants/CatList";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { CatListitemns } from "../constants/CatList";
+import { colors } from "react-native-elements";
 
 const MusicCategory = ({ icon, placeholder }) => {
   return (
     <View style={styles.Container}>
       <Text style={styles.HeaderText}>Categories</Text>
-      <ScrollView  horizontal showsHorizontalScrollIndicator={false}>
-      <View style={styles.CatViewScroll}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {CatListitemns.map((catrgory, id) => {
           return (
-            <View>
-              <Text style={styles.CatView} >{catrgory.catrgory}</Text>
+            <View
+              style={{
+                paddingVertical: 10,
+                paddingHorizontal: 10,
+                marginHorizontal: 10,
+                shadowColor: COLORS.black,
+                shadowOffset: { width: 1, height: 2 },
+                shadowOpacity: 0.3,
+                borderRadius: 7,
+                shadowRadius: 7,
+                marginVertical: 10,
+
+                flexDirection: "row",
+                justifyContent: "space-between",
+                backgroundColor: id === 0 ? COLORS.black : COLORS.white,
+              }}
+            >
+              <Text style={{ color: id === 0 ? COLORS.white : COLORS.black }}>
+                {catrgory.catrgory}
+              </Text>
             </View>
           );
         })}
-          </View>
       </ScrollView>
     </View>
   );
@@ -33,31 +50,10 @@ const MusicCategory = ({ icon, placeholder }) => {
 const styles = StyleSheet.create({
   Container: {
     paddingVertical: 12,
-
-    marginHorizontal: 16,
+    marginHorizontal: 10,
     marginVertical: 1,
   },
-  CatView: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 7,
-    // borderRadius: 8,
-  },
-  CatViewScroll:{
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    marginHorizontal:0,
-
-    flexDirection:"row",
-    justifyContent: "space-between",
-  },
-  SearchIcon: {
-    // alignItems:"flex-start",
-  },
+  SearchIcon: {},
   SearchText: {
     fontSize: 14,
     paddingLeft: 9,

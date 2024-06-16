@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { Login, Signup, Welcome, HomeScreen } from "./screens";
+import { Login, Signup, Welcome, HomeScreen,Upload } from "./screens";
 import Tab from "./components/Tab"
 // import Home from './screens/Home';
 
@@ -49,7 +49,13 @@ export default function App() {
           component={HomeScreen}
           options={{ headerShown: false }}
         />
-       
+        <Stack.Screen
+          name="Upload"
+          component={Upload}
+          options={{
+            headerShown: false
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
     // </AuthProvider>

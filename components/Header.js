@@ -7,21 +7,29 @@ import {
 } from "react-native";
 import React from "react";
 import COLORS from "../constants/colors";
-
+import { useNavigation } from "@react-navigation/native";
 
 import Octicons from '@expo/vector-icons/Octicons';
 
 
 const Header = ({ placeholder1,icon, placeholder }) => {
+  const navigation = useNavigation();
+  const handleUploadPress = () => {
+    navigation.navigate("Upload");
+  };
+
     return (
       <View style={styles.SearchContainer}>
         <Text style={styles.HeaderText}>{placeholder1}</Text>
-        <View style={styles.UploadView}>
+        <TouchableOpacity onPress={handleUploadPress}>
+        <View style={styles.UploadView}  >
       <Octicons name="upload" size={24} color={COLORS.white}
           style={styles.SearchIcon}
         />
          <Text style={styles.ButtonText}>{placeholder}</Text>
   </View>
+        </TouchableOpacity>
+      
        
       </View>
     );
