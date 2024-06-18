@@ -2,20 +2,28 @@ import React, { useState } from "react";
 import {
   View,
   Text,
+  Image,
   TextInput,
   StyleSheet,
   FlatList,
+ ScrollView,
   Pressable,
   TouchableOpacity,
-  Button,
+  // Button,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Input, CheckBox } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import COLORS from "../constants/colors";
+import UpHeader from "../components/UploadHeader";
+import InputForm from "../components/Input";
+import Entypo from '@expo/vector-icons/Entypo';
+import Button from "../components/Button";
+import HomeScreen from "./HomeScreen";
+import { color } from "react-native-elements/dist/helpers";
 
 
-const Upload = ({navigation }) => {
+const Upload = ({ navigation }) => {
   const [step, setStep] = useState(1);
   const [musicFile, setMusicFile] = useState(null);
   const [isChecked, setIsChecked] = useState(false);
@@ -96,34 +104,85 @@ const Upload = ({navigation }) => {
     switch (step) {
       case 1:
         return (
+        
           <View style={styles.stepContainer}>
+      
+            <UpHeader
+              placeholder1="Hi Hashara,"
+              icon="Upload"
+              placeholder="UPLOAD  "
+              onPress={HomeScreen}
+            />
+            <ScrollView showsHorizontalScrollIndicator={false}>
+            <View style={styles.parentContainer}>
+            <View style={styles.ImgContainer}>
+       <Image
+         source={require('../assets/mc.png')}
+        style={styles.imageStyle}
+        resizeMode="content" 
+        />
+    </View>
+    </View>
+            <View style={styles.UploadCont}>
+            <Entypo  name="upload" size={120} color="black" />
             <Button
+            style={{
+              paddingBottom: 8,
+              paddingVertical: 8,
+              width:"80%",
+              borderColor: COLORS.black,
+              backgroundColor: "transparent",
+              fontSize:10,
+               color:COLORS.black,
+              borderWidth: 2,
+              borderRadius: 12,
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            fontSize={14}
+            color={COLORS.black}
               title="Select Music File"
               onPress={selectMusicFile}
-              color="orange"
+              
             />
-            <View style={styles.TextInputForm}>
-              <TextInput
-                style={styles.InputTab}
-                placeholder="Title"
+            </View>
+            <View style={styles.TextInputContainer}>
+              <InputForm
                 value={title}
+                placeholder="Title"
                 onChangeText={setTitle}
               />
-            </View>
-            <View style={styles.TextInputForm}>
-              <TextInput
-                style={styles.InputTab}
-                placeholder="Category"
+
+              <InputForm
                 value={category}
+                placeholder="Category"
                 onChangeText={setCategory}
               />
-            </View>
-            <Button styles={styles.NextButton} title="Next" onPress={() => setStep(2)} color="orange" />
+
+              <Button
+              style={{ marginVertical:20,paddingBottom: 8,
+                paddingVertical: 8,}}
+              
+                title="Next"
+                onPress={() => setStep(2)}
+                color={COLORS.white}
+              />
+               
+               
+          
           </View>
-        );
+          </ScrollView>
+          </View>
+      );
       case 2:
         return (
           <View style={styles.stepContainer}>
+              <UpHeader
+              placeholder1="Hi Hashara,"
+              icon="Upload"
+              placeholder="UPLOAD  "
+              onPress={Upload}
+            />
             <View style={styles.TextInputForm}>
               <TextInput
                 style={styles.InputTab}
@@ -186,15 +245,15 @@ const Upload = ({navigation }) => {
               keyExtractor={(item, index) => index.toString()}
             />
             <Button
-          title="Next"
-          filled
-          onPress={() => setStep(3)}
-          styles={styles.NextButton}
-          style={{
-            marginTop: 18,
-            marginBottom: 4,
-          }}
-        />
+              title="Next"
+              filled
+              onPress={() => setStep(3)}
+              styles={styles.NextButton}
+              style={{
+                marginTop: 18,
+                marginBottom: 4,
+              }}
+            />
             {/* <Button title="Next" onPress={() => setStep(3)} color="orange" /> */}
           </View>
         );
@@ -291,12 +350,7 @@ const Upload = ({navigation }) => {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Upload Music</Text>
-      {renderStep()}
-    </View>
-  );
+  return <View style={styles.container}>{renderStep()}</View>;
 };
 
 const styles = StyleSheet.create({
@@ -321,6 +375,11 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "center",
   },
+  parentContainer: {
+    flex: 1, 
+    justifyContent: 'center',
+    alignItems: 'center', 
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
@@ -329,8 +388,11 @@ const styles = StyleSheet.create({
   },
   stepContainer: {
     flex: 1,
-    marginHorizontal: 22,
-    marginVertical: 22,
+    // marginHorizontal: 22,
+    // marginVertical: 22,
+  },
+  TextInputContainer: {
+    marginVertical: 20,
   },
   input: {
     height: 40,
@@ -388,16 +450,39 @@ const styles = StyleSheet.create({
   icon: {
     marginLeft: 10,
   },
-  NextButton:{
+  NextButton: {
     paddingBottom: 16,
     paddingVertical: 6,
     borderColor: COLORS.primary,
     borderWidth: 2,
     borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  ImgContainer: {
+    marginVertical: 49,
+    marginHorizontal:20,
     alignItems: 'center',
-    justifyContent: 'center'
-  }
- 
+  justifyContent:'center',
+  //   alignContent:'center',
+    width: 300,
+    height: 300,
+   
+  },
+
+  imageStyle: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 32,
+  },
+  UploadCont:{
+    marginHorizontal:20,
+    marginVertical:0,
+
+    alignItems:"center",
+    flexDirection:"column",
+    justifyContent: "center",
+  },
 });
 
 export default Upload;
