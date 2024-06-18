@@ -38,6 +38,7 @@ InputTab: {
     height: 48,
     borderColor: COLORS.black,
     borderWidth: 1,
+    backgroundColor:COLORS.white,
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",

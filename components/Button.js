@@ -1,36 +1,48 @@
-import { Text, TouchableOpacity, StyleSheet } from 'react-native'
-import React from 'react'
-import COLORS from '../constants/colors'
+import { Text, TouchableOpacity, StyleSheet } from "react-native";
+import React from "react";
+import COLORS from "../constants/colors";
 
 const Button = (props) => {
-    const filledBgColor = props.color || COLORS.primary;
-    const outlinedColor = COLORS.white;
-    const bgColor = props.filled ? filledBgColor : outlinedColor;
-    const textColor = props.filled ? COLORS.white : COLORS.white;
+  const filledBgColor = props.color || COLORS.primary;
+  const outlinedColor = COLORS.white;
+  const bgColor = props.filled ? filledBgColor : outlinedColor;
+  const textColor = props.filled ? COLORS.white : COLORS.white;
 
-    return (
-        <TouchableOpacity
-            style={{
-                ...styles.button,
-                ...{ backgroundColor: '#FF5757' },
-                ...props.style
-            }}
-            onPress={props.onPress}
-        >
-            <Text style={{ fontSize: props.fontSize || 22, fontWeight:props.fontWeight|| '700', color:props.color || textColor }}>{props.title}</Text>
-        </TouchableOpacity>
-    )
-}
+  return (
+    <TouchableOpacity
+      style={{
+        ...styles.button,
+        ...{ backgroundColor: "#FF5757" },
+        ...props.style,
+      }}
+      onPress={props.onPress}
+    >
+      <Text
+        style={{
+          fontSize: props.fontSize || 22,
+          fontWeight: props.fontWeight || "700",
+          color: props.color || textColor,
+        }}
+      >
+        {props.title}
+      </Text>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
-    button: {
-        paddingBottom: 16,
-        paddingVertical: 10,
-        borderColor: COLORS.primary,
-        borderWidth: 2,
-        borderRadius: 12,
-        alignItems: 'center',
-        justifyContent: 'center'
-    }
-})
-export default Button
+  button: {
+    paddingBottom: 16,
+    paddingVertical: 10,
+    borderColor: COLORS.primary,
+    borderWidth: 2,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 7,
+  },
+});
+export default Button;

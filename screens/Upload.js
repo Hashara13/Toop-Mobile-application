@@ -6,26 +6,29 @@ import {
   TextInput,
   StyleSheet,
   FlatList,
- ScrollView,
+  ScrollView,
   Pressable,
   TouchableOpacity,
   // Button,
 } from "react-native";
+import PickerTab from "../components/Picker";
+import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { Input, CheckBox } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import COLORS from "../constants/colors";
 import UpHeader from "../components/UploadHeader";
 import InputForm from "../components/Input";
-import Entypo from '@expo/vector-icons/Entypo';
+import Entypo from "@expo/vector-icons/Entypo";
 import Button from "../components/Button";
 import HomeScreen from "./HomeScreen";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { color } from "react-native-elements/dist/helpers";
-
 
 const Upload = ({ navigation }) => {
   const [step, setStep] = useState(1);
   const [musicFile, setMusicFile] = useState(null);
+  const [musicFileName, setMusicFileName] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -55,6 +58,9 @@ const Upload = ({ navigation }) => {
 
       if (!result.cancelled) {
         setMusicFile(result.uri);
+        const uriParts = result.uri.split("/");
+        const fileName = uriParts[uriParts.length - 1];
+        setMusicFileName(fileName);
       }
     } catch (error) {
       console.log("Error selecting music file:", error);
@@ -104,157 +110,178 @@ const Upload = ({ navigation }) => {
     switch (step) {
       case 1:
         return (
-        
           <View style={styles.stepContainer}>
-      
             <UpHeader
-              placeholder1="Hi Hashara,"
+              placeholder1="Home"
+              placeholder2=" | Upload File"
               icon="Upload"
-              placeholder="UPLOAD  "
-              onPress={HomeScreen}
+              targetSrc="HomeScreen"
+              targetSrc2="Upload File"
             />
             <ScrollView showsHorizontalScrollIndicator={false}>
-            <View style={styles.parentContainer}>
-            <View style={styles.ImgContainer}>
-       <Image
-         source={require('../assets/mc.png')}
-        style={styles.imageStyle}
-        resizeMode="content" 
-        />
-    </View>
-    </View>
-            <View style={styles.UploadCont}>
-            <Entypo  name="upload" size={120} color="black" />
-            <Button
-            style={{
-              paddingBottom: 8,
-              paddingVertical: 8,
-              width:"80%",
-              borderColor: COLORS.black,
-              backgroundColor: "transparent",
-              fontSize:10,
-               color:COLORS.black,
-              borderWidth: 2,
-              borderRadius: 12,
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-            fontSize={14}
-            color={COLORS.black}
-              title="Select Music File"
-              onPress={selectMusicFile}
-              
-            />
-            </View>
-            <View style={styles.TextInputContainer}>
-              <InputForm
-                value={title}
-                placeholder="Title"
-                onChangeText={setTitle}
-              />
-
-              <InputForm
-                value={category}
-                placeholder="Category"
-                onChangeText={setCategory}
-              />
-
-              <Button
-              style={{ marginVertical:20,paddingBottom: 8,
-                paddingVertical: 8,}}
-              
-                title="Next"
-                onPress={() => setStep(2)}
-                color={COLORS.white}
-              />
-               
-               
-          
+              <View style={styles.parentContainer}>
+                <View style={styles.ImgContainer}>
+                  <Image
+                    source={require("../assets/mc.png")}
+                    style={styles.imageStyle}
+                    resizeMode="content"
+                  />
+                </View>
+              </View>
+              <View style={styles.UploadCont}>
+                <Entypo name="upload" size={80} color={COLORS.grey} />
+                <Button
+                  style={{
+                    paddingBottom: 8,
+                    paddingVertical: 8,
+                    width: "80%",
+                    borderColor: COLORS.black,
+                    backgroundColor: "transparent",
+                    fontSize: 10,
+                    color: COLORS.black,
+                    borderWidth: 2,
+                    borderRadius: 12,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                  fontSize={14}
+                  color={COLORS.black}
+                  title="Select Music File"
+                  onPress={selectMusicFile}
+                />
+                {musicFileName ? (
+                  <Text style={styles.fileNameText}>{musicFileName}</Text>
+                ) : null}
+              </View>
+              <View style={styles.TextInputContainer}>
+                <InputForm
+                  value={title}
+                  placeholder="Add Title"
+                  onChangeText={setTitle}
+                />
+                <Picker
+                  selectedValue={category}
+                  onValueChange={(itemValue) => setCategory(itemValue)}
+                  style={styles.picker}
+                >
+                  <Picker.Item label="Select Category" value="" />
+                  <Picker.Item label="Pop" value="Pop" />
+                  <Picker.Item label="Rock" value="Rock" />
+                  <Picker.Item label="Jazz" value="Jazz" />
+                  <Picker.Item label="Classical" value="Classical" />
+                  <Picker.Item label="Hip-Hop" value="Hip-Hop" />
+                  <Picker.Item label="Country" value="Country" />
+                  <Picker.Item label="Electronic" value="Electronic" />
+                </Picker>
+                <Button
+                  style={{
+                    marginVertical: 20,
+                    paddingBottom: 8,
+                    paddingVertical: 8,
+                  }}
+                  title="Next"
+                  onPress={() => setStep(2)}
+                  color={COLORS.white}
+                />
+              </View>
+            </ScrollView>
           </View>
-          </ScrollView>
-          </View>
-      );
+        );
       case 2:
         return (
           <View style={styles.stepContainer}>
-              <UpHeader
-              placeholder1="Hi Hashara,"
-              icon="Upload"
-              placeholder="UPLOAD  "
-              onPress={Upload}
+            <UpHeader
+              placeholder1="Upload"
+              placeholder2=" | Add Contributors"
+              targetSrc="Upload"
+              targetSrc2="Upload File"
             />
-            <View style={styles.TextInputForm}>
-              <TextInput
-                style={styles.InputTab}
-                placeholder="Contributor Name"
-                value={newContributor.name}
-                onChangeText={(text) =>
-                  setNewContributor({ ...newContributor, name: text })
-                }
-              />
-            </View>
-
-            <View style={styles.TextInputForm}>
-              <TextInput
-                style={styles.InputTab}
-                placeholder="Role (Vocalist, Lyricist, Musician)"
-                value={newContributor.role}
-                onChangeText={(text) =>
-                  setNewContributor({ ...newContributor, role: text })
-                }
-              />
-            </View>
-            <View style={styles.container1}>
-              {options.map((option) => (
-                <CheckBox
-                  key={option.id}
-                  title={option.label}
-                  checked={selectedOptions.includes(option.id)}
-                  onPress={() => handleCheckBoxPress(option.id)}
-                  containerStyle={styles.checkboxContainer}
+            <ScrollView showsHorizontalScrollIndicator={false}>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginVertical: 30,
+                }}
+              >
+                <Ionicons name="person-add" size={160} color={COLORS.grey} />
+              </View>
+              <View style={styles.InputContainer}>
+                <InputForm
+                  value={newContributor.name}
+                  placeholder="Contributor Name"
+                  onChangeText={(text) =>
+                    setNewContributor({ ...newContributor, name: text })
+                  }
                 />
-              ))}
-            </View>
-            <View style={styles.TextInputForm}>
-              <TextInput
-                style={styles.InputTab}
-                placeholder="Percentage"
-                value={newContributor.percentage}
-                onChangeText={(text) =>
-                  setNewContributor({ ...newContributor, percentage: text })
-                }
-              />
-            </View>
-            <Button
-              title="Add Contributor"
-              onPress={addContributor}
-              color="orange"
-            />
-            <FlatList
-              data={contributors}
-              // data={options}
-              renderItem={({ item }) => (
-                <View style={styles.listItem}>
-                  <Text
-                    style={styles.ContList}
-                  >{`${item.name} (${item.role}): ${item.percentage}%`}</Text>
+                <Picker
+                  selectedValue={category}
+                  onValueChange={(itemValue) => setCategory(itemValue)}
+                  style={styles.picker}
+                >
+                  <Picker.Item label="Select Role" value="" />
+                  <Picker.Item label="Vocalist" value="Pop" />
+                  <Picker.Item label="Lyricist" value="Rock" />
+                  <Picker.Item label="Musician" value="Jazz" />
+                </Picker>
 
-                  <Icon name={"close"} size={20} style={styles.icon} on />
-                </View>
-              )}
-              keyExtractor={(item, index) => index.toString()}
-            />
-            <Button
-              title="Next"
-              filled
-              onPress={() => setStep(3)}
-              styles={styles.NextButton}
-              style={{
-                marginTop: 18,
-                marginBottom: 4,
-              }}
-            />
-            {/* <Button title="Next" onPress={() => setStep(3)} color="orange" /> */}
+                <InputForm
+                  placeholder="Percentage"
+                  value={newContributor.percentage}
+                  onChangeText={(text) =>
+                    setNewContributor({ ...newContributor, percentage: text })
+                  }
+                />
+
+                <Button
+                  style={{
+                    paddingBottom: 15,
+                    flex: 1,
+                    paddingVertical: 15,
+                    width: "80%",
+                    borderColor: COLORS.black,
+                    backgroundColor: COLORS.black,
+                    marginVertical: 10,
+                    marginHorizontal: 35,
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                  fontSize={18}
+                  color={COLORS.white}
+                  title="Add Contributor"
+                  onPress={addContributor}
+                />
+
+                <FlatList
+                  data={contributors}
+                  // data={options}
+                  renderItem={({ item }) => (
+                    <View style={styles.listItem}>
+                      <Text
+                        style={styles.ContList}
+                      >{`${item.name} (${item.role}): ${item.percentage}%`}</Text>
+
+                      <Icon name={"close"} size={20} style={styles.icon} on />
+                    </View>
+                  )}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              </View>
+
+              <Button
+                style={{
+                  marginVertical: 20,
+                  paddingBottom: 8,
+                  paddingVertical: 8,
+                }}
+                title="Next"
+                onPress={() => setStep(3)}
+                color={COLORS.white}
+              />
+            </ScrollView>
           </View>
         );
       case 3:
@@ -358,9 +385,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     borderColor: COLORS.black,
+    backgroundColor: COLORS.white,
     borderRadius: "12px",
     paddingHorizontal: 16,
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.white,
   },
   checkboxContainer: {
     marginVertical: 10,
@@ -372,13 +400,14 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    backgroundColor: COLORS.white,
     padding: 20,
     justifyContent: "center",
   },
   parentContainer: {
-    flex: 1, 
-    justifyContent: 'center',
-    alignItems: 'center', 
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
@@ -388,8 +417,7 @@ const styles = StyleSheet.create({
   },
   stepContainer: {
     flex: 1,
-    // marginHorizontal: 22,
-    // marginVertical: 22,
+    backgroundColor: COLORS.white,
   },
   TextInputContainer: {
     marginVertical: 20,
@@ -430,6 +458,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
+  fileNameText: {
+    marginTop: 10,
+    color: COLORS.grey,
+    fontSize: 14,
+    textAlign: "center",
+  },
   TextInputForm: {
     width: "100%",
     height: 48,
@@ -461,27 +495,47 @@ const styles = StyleSheet.create({
   },
   ImgContainer: {
     marginVertical: 49,
-    marginHorizontal:20,
-    alignItems: 'center',
-  justifyContent:'center',
-  //   alignContent:'center',
+    marginHorizontal: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    //   alignContent:'center',
     width: 300,
     height: 300,
-   
   },
-
+  InputContainer: {
+    shadowColor: COLORS.black,
+    borderColor: COLORS.black,
+    borderRadius: 10,
+    borderWidth: 0,
+    paddingBottom: 10,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 7,
+  },
   imageStyle: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     borderRadius: 32,
   },
-  UploadCont:{
-    marginHorizontal:20,
-    marginVertical:0,
+  UploadCont: {
+    marginHorizontal: 20,
+    marginVertical: 0,
 
-    alignItems:"center",
-    flexDirection:"column",
+    alignItems: "center",
+    flexDirection: "column",
     justifyContent: "center",
+  },
+  picker: {
+    width: "100%",
+    height: 48,
+    borderColor: COLORS.black,
+    backgroundColor: COLORS.white,
+    borderWidth: 1,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 4,
+    paddingLeft: 22,
   },
 });
 
