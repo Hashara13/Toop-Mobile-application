@@ -9,9 +9,8 @@ import {
   ScrollView,
   Pressable,
   TouchableOpacity,
-  // Button,
+ 
 } from "react-native";
-import PickerTab from "../components/Picker";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { Input, CheckBox } from "react-native-elements";
@@ -33,18 +32,19 @@ const Upload = ({ navigation }) => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [optionsCont, setoptionsCont] = useState("");
-  const [contributors, setContributors] = useState([]);
   const [newContributor, setNewContributor] = useState({
     name: "",
     role: "",
     percentage: "",
   });
-  const [packages, setPackages] = useState([]);
   const [newPackage, setNewPackage] = useState({
     name: "",
     price: "",
     features: [],
   });
+  const [packages, setPackages] = useState([]);
+  const [contributors, setContributors] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const [selectedFeatures, setSelectedFeatures] = useState([]);
 
   const selectMusicFile = async () => {
@@ -67,14 +67,6 @@ const Upload = ({ navigation }) => {
     }
   };
 
-  const [selectedOptions, setSelectedOptions] = useState([]);
-
-  const options = [
-    { id: 1, label: "Vocalist" },
-    { id: 2, label: "Lyricist" },
-    { id: 3, label: "Musician" },
-  ];
-
   const handleCheckBoxPress = (id) => {
     if (selectedOptions.includes(id)) {
       setSelectedOptions(selectedOptions.filter((optionId) => optionId !== id));
@@ -87,16 +79,22 @@ const Upload = ({ navigation }) => {
   const handleSubmit = () => {
     console.log("Selected options:", selectedOptions);
   };
+
   const addContributor = () => {
+    console.log("New Contributor before adding:", newContributor);
+    console.log("Contributors before adding:", contributors);
+  
     setContributors([...contributors, newContributor]);
     setNewContributor({ name: "", role: "", percentage: "" });
-    handleCheckBoxPress;
+  
+    console.log("New Contributor after reset:", newContributor);
+    console.log("Contributors after adding:", [...contributors, newContributor]);
   };
 
-  const addPackage = () => {
+  function addPackage() {
     setPackages([...packages, newPackage]);
     setNewPackage({ name: "", price: "", features: [] });
-  };
+  }
 
   const handleFeatureSelection = (feature) => {
     if (selectedFeatures.includes(feature)) {
@@ -208,31 +206,34 @@ const Upload = ({ navigation }) => {
                 <Ionicons name="person-add" size={160} color={COLORS.grey} />
               </View>
               <View style={styles.InputContainer}>
-                <InputForm
-                  value={newContributor.name}
-                  placeholder="Contributor Name"
-                  onChangeText={(text) =>
-                    setNewContributor({ ...newContributor, name: text })
-                  }
-                />
+              <InputForm
+          value={newContributor.name}
+          placeholder="Contributor Name"
+          onChangeText={(text) =>
+            setNewContributor({ ...newContributor, name: text })
+          }
+        />
                 <Picker
-                  selectedValue={category}
-                  onValueChange={(itemValue) => setCategory(itemValue)}
+                  selectedValue={newContributor.role}
+                  
+                  onValueChange={(itemValue) =>
+                    setNewContributor({ ...newContributor, role: itemValue })
+                  }
                   style={styles.picker}
                 >
                   <Picker.Item label="Select Role" value="" />
-                  <Picker.Item label="Vocalist" value="Pop" />
-                  <Picker.Item label="Lyricist" value="Rock" />
-                  <Picker.Item label="Musician" value="Jazz" />
+                  <Picker.Item label="Vocalist" value="Vocalist" />
+                  <Picker.Item label="Lyricist" value="Lyricist" />
+                  <Picker.Item label="Musician" value="Musician" />
                 </Picker>
 
                 <InputForm
-                  placeholder="Percentage"
-                  value={newContributor.percentage}
-                  onChangeText={(text) =>
-                    setNewContributor({ ...newContributor, percentage: text })
-                  }
-                />
+          placeholder="Percentage"
+          value={newContributor.percentage}
+          onChangeText={(text) =>
+            setNewContributor({ ...newContributor, percentage: text })
+          }
+        />
 
                 <Button
                   style={{
@@ -257,13 +258,9 @@ const Upload = ({ navigation }) => {
 
                 <FlatList
                   data={contributors}
-                  // data={options}
                   renderItem={({ item }) => (
                     <View style={styles.listItem}>
-                      <Text
-                        style={styles.ContList}
-                      >{`${item.name} (${item.role}): ${item.percentage}%`}</Text>
-
+                      <Text>{`${item.name}:  ${item.role}: ${item.percentage}`}</Text>
                       <Icon name={"close"} size={20} style={styles.icon} on />
                     </View>
                   )}
