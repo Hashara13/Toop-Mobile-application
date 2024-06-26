@@ -15,7 +15,7 @@ export default function Tab(){
 
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
-          }  else if (route.name === 'Find') {
+          }  else if (route.name === 'Purchase') {
             iconName = focused ? 'albums' : 'albums-outline';
           }
           else if (route.name === 'Upload') {
@@ -33,7 +33,7 @@ export default function Tab(){
       })}
     >
       <Tabs.Screen name="Home" component={HomeScreen} />
-      <Tabs.Screen name="Find" component={MusicDetails} />
+      <Tabs.Screen name="Purchase" component={MusicDetails} />
       <Tabs.Screen name="Upload" component={Upload} />
       <Tabs.Screen name="My Music" component={Mymusic} />
       <Tabs.Screen name="Settings" component={Settings} />

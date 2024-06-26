@@ -32,15 +32,22 @@ const InputForm = ({ placeholder}) => {
 const styles = StyleSheet.create({
 InputTab: {
     width: "100%",
+    placeholderTextColor:COLORS.grey2,
   },
   TextInputForm: {
     width: "100%",
     height: 48,
-    borderColor: COLORS.black,
+    borderColor: COLORS.lightgrey,
     borderWidth: 1,
     backgroundColor:COLORS.white,
     borderRadius: 8,
     alignItems: "center",
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 7,
+    
+    placeholderTextColor:COLORS.lightgrey,
     justifyContent: "center",
     marginVertical: 4,
     paddingLeft: 22,

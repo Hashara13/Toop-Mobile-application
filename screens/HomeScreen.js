@@ -10,7 +10,7 @@ function HomeScreen() {
   
     return (
        
-      <SafeAreaView style={{flex:1, marginHorizontal:6}}>
+      <SafeAreaView style={{flex:1, marginHorizontal:0}}>
    
       <Header placeholder1="Hi Hashara," icon="Upload" placeholder="UPLOAD  "/>
 <Search icon="search" placeholder="  Find your favourite music"/>

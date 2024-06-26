@@ -32,7 +32,12 @@ app.post("/register",async(req,res)=>{
     .catch(err=>res.json(err))
 })
 
-
+app.post("/upload",async(req,res)=>{
+    uploadMoel.create(req.body)
+    .then(uphere=>res.json(uphere))
+    .catch(err=>res.json(err))
+}
+)
 
 app.listen(3000, () => {
   console.log("Server started");
