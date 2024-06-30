@@ -1,11 +1,10 @@
 
-
-export const priceList = [
+export const priceListTrack = [
  
     {
       id: "02",
       Title: "Basic",
-      Price: "LKR 2,500 / Per Month",
+      Price: "LKR 10,500 / Per Track",
       Social:"Video & Social Media | 1 Channel",
       AudioD:"Podcasts & Audiobooks | Upto 5 Channels",
       Digital:"Digital Paid Advertising  | N/A",
@@ -15,7 +14,7 @@ export const priceList = [
     {
       id: "03",
       Title: "Standered",
-      Price: "LKR 6,000 / Per Month",
+      Price: "LKR 19,000 / Per Track",
       Social:"Video & Social Media | Upto 5 Channels",
       AudioD:"Podcasts & Audiobooks | Upto 20 Channels",
       Digital:"Digital Paid Advertising",
@@ -25,7 +24,7 @@ export const priceList = [
     {
         id: "04",
         Title: "Premium",
-        Price: "LKR 12,000 / Per Month",
+        Price: "LKR 62,000 / Per Track",
         Social:"Video & Social Media | Upto 5 Channels",
         AudioD:"Podcasts & Audiobooks | Upto 20 Channels",
         Digital:"Digital Paid Advertising",
@@ -33,3 +32,4 @@ export const priceList = [
         Events:"Wedding videographer  | Upto 08 Events",
       },
   ];
+  
