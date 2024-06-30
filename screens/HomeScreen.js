@@ -4,6 +4,7 @@ import Search from '../components/Search';
 import Header from '../components/Header';
 import MusicCategory from '../components/MusicCategory';
 import Trending from '../components/Trending';
+import COLORS from '../constants/colors';
  
 
 function HomeScreen() {
@@ -12,7 +13,7 @@ function HomeScreen() {
        
       <SafeAreaView style={{flex:1, marginHorizontal:0}}>
    
-      <Header placeholder1="Hi Hashara," icon="Upload" placeholder="UPLOAD  "/>
+      <Header backgroundColor={COLORS.white} placeholder1="Hi Hashara," icon="Upload" placeholder="UPLOAD  "/>
 <Search icon="search" placeholder="  Find your favourite music"/>
 <ScrollView >
 <MusicCategory/>
