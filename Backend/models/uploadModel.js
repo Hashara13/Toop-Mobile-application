@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-const toopSchema=new mongoose.Schema({
+const uploadSchema=new mongoose.Schema({
     username:String,
     email:{type:String,unique:true},
     mobile:String,
     password:String,
 })
 
-const uploadMoel=mongoose.model("toopapp",toopSchema)
+const uploadMoel=mongoose.model("toopapp",uploadSchema)
 module.exports=uploadMoel
