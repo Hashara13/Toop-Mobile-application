@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, SafeAreaView ,ScrollView} from 'react-native';
 import Search from '../components/Search';
 import { useNavigation } from "@react-navigation/native";
 import Octicons from '@expo/vector-icons/Octicons';
 import COLORS from '../constants/colors';
+// import OwnMusic from '../components/OwnMusic';
+import MusicTrack from '../components/MusicTrack';
 
 const Mymusic = () => {
   const navigation = useNavigation();
@@ -11,10 +13,10 @@ const Mymusic = () => {
     navigation.navigate("Upload");
   };
 
-  const placeholder = "UPLOAD"; // Define the placeholder variable
+  const placeholder = "UPLOAD"; 
 
   return (
-    <SafeAreaView style={{ flex: 1, marginHorizontal: 0 }}>
+    <SafeAreaView style={{ flex: 1, marginHorizontal: 0 , backgroundColor:COLORS.black}}>
       <View style={styles.SearchContainer}>
         <Text style={styles.HeaderText}>Add New</Text>
         <TouchableOpacity onPress={handleUploadPress}>
@@ -25,15 +27,23 @@ const Mymusic = () => {
         </TouchableOpacity>
       </View>
       <Search icon="search" placeholder="  Find your favourite music" />
-      {/* <ScrollView>
-        <MusicCategory />
-        <Trending />
-      </ScrollView> */}
+      <ScrollView >
+      <Text style={styles.HeaderText2}>Categories</Text>
+      <MusicTrack/>
+      </ScrollView >
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  HeaderText2: {
+    fontSize: 22,
+    color: COLORS.primary,
+    fontWeight: 700,
+    marginBottom:10,
+    paddingLeft: 9,
+    paddingTop: 8,
+  },
   SearchContainer: {
     width: '100%',
     paddingHorizontal: 10,
@@ -75,6 +85,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.white,
     fontWeight: "600",
+    paddingRight:10,
     shadowColor: COLORS.white,
     shadowOpacity: 10,
   }
