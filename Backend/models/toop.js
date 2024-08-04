@@ -6,5 +6,5 @@ const toopSchema=new mongoose.Schema({
     password:String,
 })
 
-const toopMoel=mongoose.model("toopapp",toopSchema)
-module.exports=toopMoel
+const toopModel=mongoose.model("toopapp",toopSchema)
+module.exports=toopModel

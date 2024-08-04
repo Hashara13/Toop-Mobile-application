@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, SafeAreaView ,ScrollView} from 'react-native';
 import Search from '../components/Search';
 import { useNavigation } from "@react-navigation/native";
@@ -6,12 +6,25 @@ import Octicons from '@expo/vector-icons/Octicons';
 import COLORS from '../constants/colors';
 // import OwnMusic from '../components/OwnMusic';
 import MusicTrack from '../components/MusicTrack';
-
+const[newMusic,setNewMusic]=useState([]);
+useEffect(() => {
+  const viewMusic = () => {
+    axios.get('http://localhost:3000/myMusic')
+      .then((res) => {
+        setNewMusic(res.data);
+      }).catch((err) => {
+        alert(err.message);
+      });
+  };
+  viewMusic();
+}, []);
 const Mymusic = () => {
   const navigation = useNavigation();
   const handleUploadPress = () => {
     navigation.navigate("Upload");
   };
+
+ 
 
   const placeholder = "UPLOAD"; 
 

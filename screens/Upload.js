@@ -110,6 +110,32 @@ const addPackage=()=> {
     }
   };
 
+  const handleUploadSubmit=(e)=>{
+    setStep(4);
+    e.preventDefault();
+    const newMusic={
+      title,
+      musicCategory,
+      contributorName,
+      contributorPercentage,
+      contributorRole,
+      packageName,
+      packagerPrice,
+      commercialUses,
+      events,
+    }
+    axios.post('http://localhost:3000/upload/new"',newMusic)
+    .then(()=>{
+      alert('New Music added !')
+      setNewContributor(''),
+      setCategory(''),
+      setTitle(''),
+      setNewPackage('')
+    })
+    .catch((err) => {
+      alert(err);
+    });
+  }
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -408,7 +434,7 @@ const addPackage=()=> {
                   borderColor: COLORS.green,
                 }}
                 title="Submit"
-                onPress={() => setStep(4)}
+                onPress={handleUploadSubmit}
                 color={COLORS.white}
               />
             </ScrollView>
