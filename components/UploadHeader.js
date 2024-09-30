@@ -22,8 +22,15 @@ const UpHeader = ({ placeholder1,targetSrc,placeholder2,targetSrc2}) => {
         color={COLORS.primary}
         style={styles.Icon}
       />
+      
+    <TouchableOpacity style={styles.TouchContainer} onPress={handleUploadPress}>
+
+    
       <Text style={styles.HeaderText}>{placeholder1}</Text>{" "}
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.TouchContainer} onPress={handleUploadPress2}>
       <Text style={styles.HeaderText2}  onPress={handleUploadPress2}>{placeholder2}</Text>{" "}
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 };

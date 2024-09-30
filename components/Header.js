@@ -8,6 +8,7 @@ import {
 import React from "react";
 import COLORS from "../constants/colors";
 import { useNavigation } from "@react-navigation/native";
+import Entypo from '@expo/vector-icons/Entypo';
 
 import Octicons from '@expo/vector-icons/Octicons';
 
@@ -37,18 +38,23 @@ const Header = ({ placeholder1,icon, placeholder }) => {
   
   const styles = StyleSheet.create({
     SearchContainer: {
-      paddingHorizontal: 2,
-      paddingVertical: 4,
+      width:'100%',
+      paddingHorizontal:10,
+      paddingVertical: 10,
       borderColor: COLORS.black,
+      backgroundColor:COLORS.dark,
       flexDirection: "row",
-      marginHorizontal: 16,
+      borderBottomLeftRadius:15,
+      borderBottomRightRadius:15,
       justifyContent:"space-between",
-      marginVertical: 10,
-  
+      marginEnd:0,
+      shadowColor: COLORS.black,
+      shadowOffset: { width: 0, height: 3 },
+      shadowOpacity: 0.2,
+      shadowRadius: 8,
      
     },
-    UploadView:{
-        
+    UploadView:{   
     flexDirection:"row-reverse",
     paddingHorizontal:16,
     paddingVertical:10,
@@ -60,16 +66,19 @@ const Header = ({ placeholder1,icon, placeholder }) => {
       shadowOpacity: 0.2,
       shadowRadius: 7,
       borderRadius:8,
+      
     
     },
     
     HeaderText: {
       fontSize: 22,
-      color:COLORS.black,
+      color:COLORS.white,
       fontWeight:700,
       paddingLeft: 9,
-      paddingTop:8
+      paddingTop:8,
+      shadowColor: COLORS.black,
      
+      
     },
     ButtonText:{
         fontSize: 16, 

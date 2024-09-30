@@ -3,15 +3,13 @@ import {
   View,
   Text,
   Image,
-  TextInput,
   StyleSheet,
   FlatList,
   ScrollView,
   Pressable,
   TouchableOpacity,
-  // Button,
+  Modal,
 } from "react-native";
-import PickerTab from "../components/Picker";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { Input, CheckBox } from "react-native-elements";
@@ -33,18 +31,19 @@ const Upload = ({ navigation }) => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [optionsCont, setoptionsCont] = useState("");
-  const [contributors, setContributors] = useState([]);
   const [newContributor, setNewContributor] = useState({
     name: "",
     role: "",
     percentage: "",
   });
-  const [packages, setPackages] = useState([]);
   const [newPackage, setNewPackage] = useState({
     name: "",
     price: "",
     features: [],
   });
+  const [packages, setPackages] = useState([]);
+  const [contributors, setContributors] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const [selectedFeatures, setSelectedFeatures] = useState([]);
 
   const selectMusicFile = async () => {
@@ -67,14 +66,6 @@ const Upload = ({ navigation }) => {
     }
   };
 
-  const [selectedOptions, setSelectedOptions] = useState([]);
-
-  const options = [
-    { id: 1, label: "Vocalist" },
-    { id: 2, label: "Lyricist" },
-    { id: 3, label: "Musician" },
-  ];
-
   const handleCheckBoxPress = (id) => {
     if (selectedOptions.includes(id)) {
       setSelectedOptions(selectedOptions.filter((optionId) => optionId !== id));
@@ -87,17 +78,30 @@ const Upload = ({ navigation }) => {
   const handleSubmit = () => {
     console.log("Selected options:", selectedOptions);
   };
+
   const addContributor = () => {
+    console.log("New Contributor before adding:", newContributor);
+    console.log("Contributors before adding:", contributors);
+
     setContributors([...contributors, newContributor]);
     setNewContributor({ name: "", role: "", percentage: "" });
-    handleCheckBoxPress;
-  };
 
-  const addPackage = () => {
+    console.log("New Contributor after reset:", newContributor);
+    console.log("Contributors after adding:", [
+      ...contributors,
+      newContributor,
+    ]);
+  };
+const removeContributor=(id)=>{
+  setContributors(contributors.filter((contributor)=>contributor.id!=id));
+};
+const addPackage=()=> {
     setPackages([...packages, newPackage]);
     setNewPackage({ name: "", price: "", features: [] });
-  };
-
+  }
+  const removePackage=(id)=>{
+  setPackages(packages.filter((packag)=>packag.id!=id))
+}
   const handleFeatureSelection = (feature) => {
     if (selectedFeatures.includes(feature)) {
       setSelectedFeatures(selectedFeatures.filter((item) => item !== feature));
@@ -106,6 +110,32 @@ const Upload = ({ navigation }) => {
     }
   };
 
+  const handleUploadSubmit=(e)=>{
+    setStep(4);
+    e.preventDefault();
+    const newMusic={
+      title,
+      musicCategory,
+      contributorName,
+      contributorPercentage,
+      contributorRole,
+      packageName,
+      packagerPrice,
+      commercialUses,
+      events,
+    }
+    axios.post('http://localhost:3000/upload/new"',newMusic)
+    .then(()=>{
+      alert('New Music added !')
+      setNewContributor(''),
+      setCategory(''),
+      setTitle(''),
+      setNewPackage('')
+    })
+    .catch((err) => {
+      alert(err);
+    });
+  }
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -116,7 +146,7 @@ const Upload = ({ navigation }) => {
               placeholder2=" | Upload File"
               icon="Upload"
               targetSrc="HomeScreen"
-              targetSrc2="Upload File"
+              targetSrc2="setStep(1)"
             />
             <ScrollView showsHorizontalScrollIndicator={false}>
               <View style={styles.parentContainer}>
@@ -132,20 +162,20 @@ const Upload = ({ navigation }) => {
                 <Entypo name="upload" size={80} color={COLORS.grey} />
                 <Button
                   style={{
-                    paddingBottom: 8,
+                    paddingBottom: 10,
                     paddingVertical: 8,
-                    width: "80%",
-                    borderColor: COLORS.black,
-                    backgroundColor: "transparent",
+                    width: "50%",
+                    borderColor: COLORS.lightblue,
+                    backgroundColor: COLORS.lightblue,
                     fontSize: 10,
                     color: COLORS.black,
-                    borderWidth: 2,
+                    borderWidth: 1,
                     borderRadius: 12,
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                   fontSize={14}
-                  color={COLORS.black}
+                  color={COLORS.white}
                   title="Select Music File"
                   onPress={selectMusicFile}
                 />
@@ -177,6 +207,10 @@ const Upload = ({ navigation }) => {
                   style={{
                     marginVertical: 20,
                     paddingBottom: 8,
+                    width: "100%",
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
                     paddingVertical: 8,
                   }}
                   title="Next"
@@ -193,8 +227,11 @@ const Upload = ({ navigation }) => {
             <UpHeader
               placeholder1="Upload"
               placeholder2=" | Add Contributors"
-              targetSrc="Upload"
-              targetSrc2="Upload File"
+              // targetSrc="Upload"
+              // targetSrc2="step(1)"
+              setStep={setStep}
+              targetStep1={1}
+              targetStep2={1}
             />
             <ScrollView showsHorizontalScrollIndicator={false}>
               <View
@@ -216,14 +253,16 @@ const Upload = ({ navigation }) => {
                   }
                 />
                 <Picker
-                  selectedValue={category}
-                  onValueChange={(itemValue) => setCategory(itemValue)}
+                  selectedValue={newContributor.role}
+                  onValueChange={(itemValue) =>
+                    setNewContributor({ ...newContributor, role: itemValue })
+                  }
                   style={styles.picker}
                 >
                   <Picker.Item label="Select Role" value="" />
-                  <Picker.Item label="Vocalist" value="Pop" />
-                  <Picker.Item label="Lyricist" value="Rock" />
-                  <Picker.Item label="Musician" value="Jazz" />
+                  <Picker.Item label="Vocalist" value="Vocalist" />
+                  <Picker.Item label="Lyricist" value="Lyricist" />
+                  <Picker.Item label="Musician" value="Musician" />
                 </Picker>
 
                 <InputForm
@@ -239,17 +278,19 @@ const Upload = ({ navigation }) => {
                     paddingBottom: 15,
                     flex: 1,
                     paddingVertical: 15,
-                    width: "80%",
-                    borderColor: COLORS.black,
-                    backgroundColor: COLORS.black,
+                    paddingHorizontal: 7,
+                    width: "50%",
+                    borderColor: COLORS.lightblue,
+                    backgroundColor: COLORS.lightblue,
                     marginVertical: 10,
-                    marginHorizontal: 35,
+                    marginHorizontal: 0,
                     borderWidth: 2,
                     borderRadius: 8,
                     alignItems: "center",
                     justifyContent: "center",
                   }}
-                  fontSize={18}
+                  fontSize={16}
+                  fontWeight={600}
                   color={COLORS.white}
                   title="Add Contributor"
                   onPress={addContributor}
@@ -257,17 +298,14 @@ const Upload = ({ navigation }) => {
 
                 <FlatList
                   data={contributors}
-                  // data={options}
                   renderItem={({ item }) => (
                     <View style={styles.listItem}>
-                      <Text
-                        style={styles.ContList}
-                      >{`${item.name} (${item.role}): ${item.percentage}%`}</Text>
-
-                      <Icon name={"close"} size={20} style={styles.icon} on />
+                      <Text>{`${item.name}:  ${item.role}: ${item.percentage}`}</Text>
+                      <TouchableOpacity onPress={() => removeContributor(item.id)}>
+                      <Icon name={"close"} size={20} style={styles.icon}  /></TouchableOpacity>
                     </View>
                   )}
-                  keyExtractor={(item, index) => index.toString()}
+                  keyExtractor={(item) => item.id}
                 />
               </View>
 
@@ -287,97 +325,187 @@ const Upload = ({ navigation }) => {
       case 3:
         return (
           <View style={styles.stepContainer}>
-            <View style={styles.TextInputForm}>
-              <TextInput
-                style={styles.InputTab}
-                placeholder="Package Name"
-                value={newPackage.name}
-                onChangeText={(text) =>
-                  setNewPackage({ ...newPackage, name: text })
-                }
-              />
-            </View>
-            <View style={styles.TextInputForm}>
-              <TextInput
-                style={styles.InputTab}
-                placeholder="Price"
-                value={newPackage.price}
-                onChangeText={(text) =>
-                  setNewPackage({ ...newPackage, price: text })
-                }
-              />
-            </View>
-            <View style={styles.featuresContainer}>
-              <Text style={styles.featuresLabel}>Select Features:</Text>
-              <View style={styles.checkboxContainer}>
-                <CheckBox
-                  value={selectedFeatures.includes("Commercial Use")}
-                  onValueChange={() => handleFeatureSelection("Commercial Use")}
-                />
-                <Text style={styles.checkboxLabel}>Commercial Use</Text>
-              </View>
-              <View style={styles.checkboxContainer}>
-                <CheckBox
-                  value={selectedFeatures.includes("On Stage Use")}
-                  onValueChange={() => handleFeatureSelection("On Stage Use")}
-                />
-                <Text style={styles.checkboxLabel}>On Stage Use</Text>
-              </View>
-              <View style={styles.checkboxContainer}>
-                <CheckBox
-                  value={selectedFeatures.includes("Content Usage")}
-                  onValueChange={() => handleFeatureSelection("Content Usage")}
-                />
-                <Text style={styles.checkboxLabel}>Content Usage</Text>
-              </View>
-            </View>
-            <Button title="Add Package" onPress={addPackage} color="orange" />
-            <FlatList
-              data={packages}
-              renderItem={({ item }) => (
-                <View style={styles.listItem}>
-                  <Text>{`${item.name}: ${item.price} - ${item.features.join(
-                    ", "
-                  )}`}</Text>
-                </View>
-              )}
-              keyExtractor={(item, index) => index.toString()}
+            <UpHeader
+              placeholder1="Upload"
+              placeholder2=" | Pricing"
+              targetSrc="Upload"
+              targetSrc2="Upload File"
             />
-            <Button title="Submit" onPress={() => setStep(4)} color="black" />
+            <ScrollView showsHorizontalScrollIndicator={false}>
+              <View style={styles.InputContainer1}>
+                <View style={styles.rateCont}>
+                  <Text style={styles.rateText}>Add Your Rates</Text>
+                </View>
+                <InputForm
+                  value={newPackage.name}
+                  placeholder="Package Name"
+                  onChangeText={(text) =>
+                    setNewPackage({ ...newPackage, name: text })
+                  }
+                />
+                <InputForm
+                  placeholder="Price"
+                  value={newPackage.price}
+                  onChangeText={(text) =>
+                    setNewPackage({ ...newPackage, price: text })
+                  }
+                />
+                <Picker
+                  selectedValue={newPackage.features}
+                  onValueChange={(itemValue) =>
+                    setNewContributor({ ...newPackage, features: itemValue })
+                  }
+                  style={styles.picker1}
+                >
+                  <Picker.Item label="Select Package" value="" />
+                  <Picker.Item label="Basic" value="Basic" />
+                  <Picker.Item label="Standered" value="Standered" />
+                  <Picker.Item label="Premium" value="Premium" />
+                </Picker>
+                <View style={styles.featuresContainer}>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    <Picker style={styles.pickersub}
+                    selectedValue={selectedFeatures.includes("Commercial Use")}
+                    onValueChange={() => handleFeatureSelection("Commercial Use")}
+                    >
+                      <Picker.Item label="Commercial Uses" value="" />
+                      <Picker.Item label="Advertising and Marketing" value="Advertising and Marketing" />
+                      <Picker.Item label="Film and Television" value="Film and Television" />
+                      <Picker.Item label="Video Games" value="Video Games" />
+                      <Picker.Item label="Custom Music Production" value="Custom Music Production" />
+                    </Picker>
+                    <Picker style={styles.pickersub}
+                       selectedValue={selectedFeatures.includes("Events and Venues")}
+                       onValueChange={() => handleFeatureSelection("Events and Venues")}
+                    >
+                      <Picker.Item label="Events and Venues" value="" />
+                      <Picker.Item label="Below 05" value="Below 05" />
+                      <Picker.Item label="05 - 10" value="05 - 10" />
+                      <Picker.Item label="Above 10" value="Above 10" />
+                    </Picker>
+              
+                  </ScrollView>
+                </View>
+                <Button
+                  style={{
+                    paddingBottom: 10,
+                    flex: 1,
+                    paddingVertical: 10,
+                    paddingHorizontal: 7,
+                    width: "50%",
+                    borderColor: COLORS.lightblue,
+                    backgroundColor: COLORS.lightblue,
+                    marginVertical: 10,
+                    marginHorizontal: 10,
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                  fontSize={16}
+                  fontWeight={600}
+                  color={COLORS.white}
+                  title="Add Pricing"
+                  onPress={addPackage}
+                />
+                <FlatList
+                  data={packages}
+                  renderItem={({ item }) => (
+                    <View style={styles.listItem}>
+                      <Text>{`${item.name}: ${
+                        item.price
+                      } - ${item.features.join(", ")}`}</Text>
+                        <TouchableOpacity onPress={() => removePackage(item.id)}>
+                      <Icon name={"close"} size={20} style={styles.icon}  /></TouchableOpacity>
+                    </View>
+                  
+                    
+                  )}
+                  keyExtractor={(item) => item.id}
+                />
+              </View>
+
+              <Button
+                style={{
+                  marginVertical: 20,
+                  paddingBottom: 8,
+                  paddingVertical: 8,
+                  backgroundColor: COLORS.green,
+                  borderColor: COLORS.green,
+                }}
+                title="Submit"
+                onPress={handleUploadSubmit}
+                color={COLORS.white}
+              />
+            </ScrollView>
           </View>
         );
       case 4:
-        return (
-          <View style={styles.stepContainer}>
-            <Text style={styles.submittedText}>Music Details:</Text>
-            <Text>Title: {title}</Text>
-            <Text>Category: {category}</Text>
-            <Text>Contributors:</Text>
-            <FlatList
-              data={contributors}
-              renderItem={({ item }) => (
-                <Text>{`${item.name} (${item.role}): ${item.percentage}%`}</Text>
-              )}
-              keyExtractor={(item, index) => index.toString()}
-            />
-            <Text>Packages:</Text>
-            <FlatList
-              data={packages}
-              renderItem={({ item }) => (
-                <Text>{`${item.name}: ${item.price} - ${item.features.join(
-                  ", "
-                )}`}</Text>
-              )}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          </View>
-        );
+        return ( 
+        <View style={styles.stepContainer}>
+          <Modal visible={true} animationType="slide" transparent={true}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor:COLORS.white,
+              }}
+            >
+              <View
+                style={{
+                  backgroundColor: "white",
+                  padding: 20,
+                  borderRadius: 10,
+                  width: "80%",
+                  maxHeight: "80%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => setStep(0)}
+                  style={{ alignSelf: "flex-end", padding: 6 }}
+                >
+                  <Text style={{ color: "blue" }}>Close</Text>
+                </TouchableOpacity>
+                <Text
+                  style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}
+                >
+                  Music Details:
+                </Text>
+                <Text>Title: {title}</Text>
+                <Text>Category: {category}</Text>
+                <Text>Contributors:</Text>
+                <FlatList
+                  data={contributors}
+                  renderItem={({ item }) => (
+                    <Text>{`${item.name} (${item.role}): ${item.percentage}%`}</Text>
+                  )}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+                <Text>Packages:</Text>
+                <FlatList
+                  data={packages}
+                  renderItem={({ item }) => (
+                    <Text>{`${item.name}: ${item.price} - ${item.features.join(
+                      ", "
+                    )}`}</Text>
+                  )}
+                  keyExtractor={(item) => item.id}
+                />
+              </View>
+            </View>
+          </Modal>
+         </View>
+         );
       default:
         return null;
     }
   };
 
   return <View style={styles.container}>{renderStep()}</View>;
+  
 };
 
 const styles = StyleSheet.create({
@@ -415,6 +543,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
   },
+ 
   stepContainer: {
     flex: 1,
     backgroundColor: COLORS.white,
@@ -439,7 +568,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   featuresContainer: {
-    marginBottom: 20,
+    fontColor: COLORS.white,
+    paddingVertical: 5,
+    justifyContent:'space-between',
+    marginHorizontal: 0,
+    marginVertical: 0,
   },
   featuresLabel: {
     fontWeight: "bold",
@@ -528,14 +661,78 @@ const styles = StyleSheet.create({
   picker: {
     width: "100%",
     height: 48,
-    borderColor: COLORS.black,
+    borderColor: COLORS.grey2,
     backgroundColor: COLORS.white,
-    borderWidth: 1,
+    borderWidth: 0,
+    borderRadius: 8,
+    fontColor:COLORS.grey2,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 7,
+    marginVertical: 4,
+    paddingLeft: 22,
+  },
+  picker1: {
+    width: "100%",
+    height: 48,
+    backgroundColor: COLORS.white,
+
+    borderWidth: 0,
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 7,
     marginVertical: 4,
     paddingLeft: 22,
+  },
+  pickersub: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    marginHorizontal: 4,
+    placeholderTextColor: COLORS.black,
+    backgroundColor: COLORS.lightgrey,
+    borderColor: COLORS.lightgrey,
+    borderWidth: 0,
+    borderRadius: 8,
+    marginVertical: 8,
+    borderLeftColor: "#fff4ee",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 7,
+  },
+  InputContainer1: {
+    shadowColor: COLORS.black,
+    borderColor: COLORS.black,
+    borderRadius: 10,
+    borderWidth: 0,
+    paddingBottom: 10,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 7,
+    marginVertical: 35,
+  },
+  rateCont: {
+    marginVertical: 1,
+    justifyContent: "center",
+    flex: 1,
+    alignItems: "center",
+    paddingBottom: 25,
+  },
+  rateText: {
+    fontSize: 28,
+    fontWeight: "700",
+    paddingTop: 4,
+    color: COLORS.primary,
+    paddingBottom: 15,
   },
 });
 
