@@ -4,7 +4,7 @@ import Search from '../components/Search';
 import { useNavigation } from "@react-navigation/native";
 import Octicons from '@expo/vector-icons/Octicons';
 import COLORS from '../constants/colors';
-// import OwnMusic from '../components/OwnMusic';
+import OwnMusic from '../components/OwnMusic';
 import MusicTrack from '../components/MusicTrack';
 const[newMusic,setNewMusic]=useState([]);
 useEffect(() => {
